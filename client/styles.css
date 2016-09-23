@@ -14,8 +14,9 @@ body {
   width: 800px;
   height: 800px;
   margin: auto;
-  top: 100px;
+  top: 20px;
   background-color: black;
+  position: relative;
 }
 
 .enemy {

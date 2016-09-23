@@ -2,9 +2,11 @@
 var gameSettings = {
   enemyNum: 10,
   boardSize: 800,
-  enemySize: 50,
+  enemySize: 80,
   speed: 1000
 };
+
+// Append board svg to 
 
 // Enemies
 var enemies = new Array(gameSettings.enemyNum).fill('x'); // x values
@@ -16,7 +18,7 @@ var updateEnemyLocations = function(data) {
 
   // random location helper function
   var randomLocation = function() {
-    return Math.floor(Math.random() * (gameSettings.boardSize - gameSettings.enemySize)) + gameSettings.enemySize;
+    return Math.floor(Math.random() * (gameSettings.boardSize - gameSettings.enemySize));
   };
 
   // new Elements needs a location
