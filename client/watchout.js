@@ -209,7 +209,9 @@ var setupGame = function() {
   gameSettings.newGame = true;
 
   gameSettings.scores.current = 0;
-
+  gameSettings.scores.rounds = 0;
+  setText('.rounds', gameSettings.scores.rounds);
+  
   collisionDetectorInterval = setInterval(collisionDetector, 10);
   scoreCounterInterval = setInterval(function() {
     if (gameSettings.isRunning) {
