@@ -16,6 +16,7 @@ var gameSettings = {
 
 // Enemies
 var enemies = [];
+var gameLoopInterval, scoreCounterInterval, collisionDetectorInterval;
 
 var setText = function(key, text) {
   var c = d3.select(key)[0][0];
@@ -81,7 +82,7 @@ gameBoard.on('click', function() {
 
   //trigger game start
   updateEnemyLocations(enemies);
-  setInterval(function() {
+  gameLoopInterval = setInterval(function() {
     if (gameSettings.isRunning) {
       setText('.rounds', ++gameSettings.scores.rounds);
       enemies = enemies.concat(0);
@@ -179,6 +180,10 @@ var collisionDetector = function() {
     
     if (isColliding({x: xCoord, y: yCoord},
                     {x: xPlayer, y: yPlayer})) {
+      clearInterval(gameLoopInterval);
+      clearInterval(collisionDetectorInterval);
+      clearInterval(scoreCounterInterval);
+
       // Game over!
       console.log('KA BOOM!');
       gameSettings.isRunning = false;
@@ -193,14 +198,6 @@ var collisionDetector = function() {
     }
   });
 };
-setInterval(collisionDetector, 10);
-
-setInterval(function() {
-  if (gameSettings.isRunning) {
-    gameSettings.scores.current = gameSettings.scores.current + gameSettings.enemyNum;
-    setText('.current', gameSettings.scores.current);  
-  }
-}, 100);
 
 var setupGame = function() {
   removeAllEnemies();
@@ -212,6 +209,14 @@ var setupGame = function() {
   gameSettings.newGame = true;
 
   gameSettings.scores.current = 0;
+
+  collisionDetectorInterval = setInterval(collisionDetector, 10);
+  scoreCounterInterval = setInterval(function() {
+    if (gameSettings.isRunning) {
+      gameSettings.scores.current = gameSettings.scores.current + gameSettings.enemyNum;
+      setText('.current', gameSettings.scores.current);  
+    }
+  }, 100);
 };
 setupGame();
 
