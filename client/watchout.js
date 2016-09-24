@@ -4,7 +4,7 @@ var gameSettings = {
   boardSize: 800,
   enemySize: 50,
   playerSize: 40,
-  speed: 5000,
+  speed: 2000,
   isRunning: false,
   newGame: true
 };
@@ -35,6 +35,9 @@ gameBoard.on('click', function() {
   // set up player dragging
   var drag = d3.behavior.drag()
                         .on('drag', function(d) {
+                          if (!gameSettings.isRunning) {
+                            return;
+                          }
                           d3.select(this)
                             .style('top', function(d) {
                               if (d3.event.y < 0) {
@@ -159,10 +162,13 @@ var collisionDetector = function() {
       // Game over!
       console.log('KA BOOM!');
       gameSettings.isRunning = false;
+
+      //Stop the transition
+      d3.selectAll('.enemy').transition();
     }
   });
 };
-setInterval(collisionDetector, 200);
+setInterval(collisionDetector, 100);
 
 //calling the update function with the starting enemies at specified time interval
 // setInterval(function() {
@@ -182,7 +188,7 @@ setInterval(collisionDetector, 200);
     x Set a tween function for every step in the interpolation and console log the current position
     x Create function to mathematically determine if there is a collision
     x Match the current enemy location with the current player location
-  - Stop the game
+  x Stop the game
   - Display score and timers
   - (DONE)
   - Increase number of enemies
