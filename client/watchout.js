@@ -6,12 +6,22 @@ var gameSettings = {
   playerSize: 40,
   speed: 2000,
   isRunning: false,
-  newGame: true
+  newGame: true,
+  scores: {
+    current: 0,
+    highscore: 0,
+    rounds: 0,
+  }
 };
 var left = 10;
 
 // Enemies
 var enemies = new Array(gameSettings.enemyNum).fill(0); // x values
+
+var setText = function(key, text) {
+  var c = d3.select(key)[0][0];
+  c.innerHTML = text;
+};
 
 // create the board with d3 to get a reference to that object
 var gameBoard = d3.select('.game')
@@ -31,7 +41,7 @@ gameBoard.on('click', function() {
   }
   gameSettings.newGame = false;
   gameSettings.isRunning = true;
-
+  
   // set up player dragging
   var drag = d3.behavior.drag()
                         .on('drag', function(d) {
@@ -165,10 +175,23 @@ var collisionDetector = function() {
 
       //Stop the transition
       d3.selectAll('.enemy').transition();
+
+      setText('.rounds', ++gameSettings.scores.rounds);
+
+      if (gameSettings.scores.current > gameSettings.scores.highscore) {
+        gameSettings.scores.highscore = gameSettings.scores.current;
+        setText('.highscore', gameSettings.scores.highscore);
+      }
     }
   });
 };
 setInterval(collisionDetector, 100);
+
+setInterval(function() {
+  if (gameSettings.isRunning) {
+    setText('.current', ++gameSettings.scores.current);  
+  }
+}, 10);
 
 //calling the update function with the starting enemies at specified time interval
 // setInterval(function() {
