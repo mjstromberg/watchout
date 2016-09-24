@@ -29,16 +29,35 @@ gameBoard.on('click', function() {
   }
   gameSettings.isRunning = true;
   console.log('game stated ', event);
+  
+  // set up player dragging
+  var dragCallback = function(d) {
+    d3.select(this)
+      .attr('transform', 'translate(' + d3.event.x + ',' + d3.event.y + ')');
+  };
 
-  player = d3.select('.board')
-               .append('svg')
-               .attr('class', 'player')
-               .style('top', function(element) {
-                 return (event.offsetY - (gameSettings.playerSize / 2)) + 'px';
-               })
-               .style('left', function(element) {
-                 return (event.offsetX - (gameSettings.playerSize / 2)) + 'px';
-               });
+  var drag = d3.behavior.drag()
+                        .on('drag', function(d) {
+                          console.log('being dragged');
+                          console.log('d3.event:');
+                          console.log(d3.event);
+                          //dragCallback();
+                          d3.select(this).attr('transform', function(d) {
+                            return 'translate(' + d3.event.x + ',' + d3.event.y + ')';
+                          });
+                        });
+
+  var player = d3.select('.board')
+                 .append('svg')
+                 .attr('class', 'player')
+                 .style('top', function(element) {
+                   return (event.offsetY - (gameSettings.playerSize / 2)) + 'px';
+                 })
+                 .style('left', function(element) {
+                   return (event.offsetX - (gameSettings.playerSize / 2)) + 'px';
+                 })
+                 .call(drag); //DRAG RELTAED
+
 
   //trigger game start
   updateEnemyLocations(enemies);
