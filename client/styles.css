@@ -44,15 +44,15 @@ body {
 .menu {
   clear: both;
   height: 50px;
-  width: 80%;
+  width: 800px;
   margin: auto;
 }
 
 .stats {
   float: left;
   text-align: center;
-  width: 25%;
-  margin: 1em;
+  width: 30%;
+  margin-top: 20px;
   font-size: 20px;
 }
 
