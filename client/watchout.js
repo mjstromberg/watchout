@@ -1,11 +1,12 @@
 // start slingin' some d3 here.
 var gameSettings = {
-  enemyNum: 2,
+  enemyNum: 10,
   boardSize: 800,
   enemySize: 50,
   playerSize: 40,
   speed: 5000,
-  isRunning: false
+  isRunning: false,
+  newGame: true
 };
 var left = 10;
 
@@ -25,11 +26,12 @@ var gameBoard = d3.select('.game')
 
 // on board object, attach click event
 gameBoard.on('click', function() {
-  if (gameSettings.isRunning) {
-    return;
+  if (!gameSettings.newGame) {
+    return;  
   }
+  gameSettings.newGame = false;
   gameSettings.isRunning = true;
-  
+
   // set up player dragging
   var drag = d3.behavior.drag()
                         .on('drag', function(d) {
@@ -72,15 +74,34 @@ gameBoard.on('click', function() {
   }, gameSettings.speed);
 });
 
-// update function that takes an array of enemies
-var updateEnemyLocations = function(data) {
+var randomLocation = function() {
+  return Math.floor(Math.random() * (gameSettings.boardSize - gameSettings.enemySize));
+};
+
+var placeEnemies = function(data) {
   // add the new added enemies, in most cases its only for the first round
   var selection = d3.select('.board').selectAll('.enemy').data(data);
 
-  // random location helper function
-  var randomLocation = function() {
-    return Math.floor(Math.random() * (gameSettings.boardSize - gameSettings.enemySize));
-  };
+// new Elements needs a location
+  selection.enter().append('svg')
+    .attr('class', 'enemy')
+    .style('top', function(enemy) {
+      return randomLocation() + 'px';
+    })
+    .style('left', function(enemy) {
+      return randomLocation() + 'px';
+    });
+};
+placeEnemies(enemies);
+
+// update function that takes an array of enemies
+var updateEnemyLocations = function(data) {
+  if (!gameSettings.isRunning) {
+    return;
+  }
+
+  // add the new added enemies, in most cases its only for the first round
+  var selection = d3.select('.board').selectAll('.enemy').data(data);
 
   // for all the old elements, update location
   selection
@@ -95,20 +116,7 @@ var updateEnemyLocations = function(data) {
       .style('left', function(enemy) {
         return randomLocation() + 'px';
       });
-      
-  // new Elements needs a location
-  selection.enter().append('svg')
-    .attr('class', 'enemy')
-    .style('top', function(enemy) {
-      return randomLocation() + 'px';
-    })
-    .style('left', function(enemy) {
-      //return randomLocation() + 'px';
-      return '0px';
-    });
 };  
-
-updateEnemyLocations(enemies);
 
 var collisionDetector = function() {
   if (!gameSettings.isRunning) {
@@ -117,11 +125,15 @@ var collisionDetector = function() {
 
   // check for collisions
   var isColliding = function(enemy, player) {
-    var distanceHeight = Math.pow((enemy.x - player.x), 2);
-    var distanceWidth = Math.pow((enemy.y - player.y), 2);
+    var enemyCenterX = enemy.x + (gameSettings.enemySize / 2);
+    var enemyCenterY = enemy.y + (gameSettings.enemySize / 2);
+    var playerCenterX = player.x + (gameSettings.playerSize / 2);
+    var playerCenterY = player.y + (gameSettings.playerSize / 2);
+    var distanceHeight = Math.pow((enemyCenterX - playerCenterX), 2);
+    var distanceWidth = Math.pow((enemyCenterY - playerCenterY), 2);
     var distance = Math.sqrt(distanceHeight + distanceWidth);
 
-    if (distance < (gameSettings.playerSize + gameSettings.enemySize)) {
+    if (distance < ((gameSettings.playerSize / 2) + (gameSettings.enemySize / 2))) {
       return true;
     }
     return false;
@@ -146,6 +158,7 @@ var collisionDetector = function() {
                     {x: xPlayer, y: yPlayer})) {
       // Game over!
       console.log('KA BOOM!');
+      gameSettings.isRunning = false;
     }
   });
 };
