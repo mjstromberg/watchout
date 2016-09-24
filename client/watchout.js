@@ -1,6 +1,6 @@
 // start slingin' some d3 here.
 var gameSettings = {
-  enemyNum: 10,
+  enemyNum: 1,
   boardSize: 800,
   enemySize: 50,
   playerSize: 40,
@@ -82,12 +82,18 @@ gameBoard.on('click', function() {
   //trigger game start
   updateEnemyLocations(enemies);
   setInterval(function() {
-    updateEnemyLocations(enemies);
+    if (gameSettings.isRunning) {
+      setText('.rounds', ++gameSettings.scores.rounds);
+      enemies = enemies.concat(0);
+      placeEnemies(enemies);
+      updateEnemyLocations(enemies);  
+    }
   }, gameSettings.speed);
 });
 
 var randomLocation = function() {
-  return Math.floor(Math.random() * (gameSettings.boardSize - gameSettings.enemySize));
+  var randomNumber = Math.floor(Math.random() * (gameSettings.boardSize * 1.5));
+  return randomNumber - gameSettings.boardSize / 4;
 };
 
 var placeEnemies = function(data) {
@@ -116,8 +122,6 @@ var updateEnemyLocations = function(data) {
   if (!gameSettings.isRunning) {
     return;
   }
-
-  console.log(gameSettings.speed);
 
   // add the new added enemies, in most cases its only for the first round
   var selection = d3.select('.board').selectAll('.enemy').data(data);
@@ -193,7 +197,8 @@ setInterval(collisionDetector, 10);
 
 setInterval(function() {
   if (gameSettings.isRunning) {
-    setText('.current', ++gameSettings.scores.current);  
+    gameSettings.scores.current = gameSettings.scores.current + gameSettings.enemyNum;
+    setText('.current', gameSettings.scores.current);  
   }
 }, 100);
 
@@ -206,7 +211,6 @@ var setupGame = function() {
   player.exit().remove();
   gameSettings.newGame = true;
 
-  setText('.rounds', ++gameSettings.scores.rounds);
   gameSettings.scores.current = 0;
 };
 setupGame();
@@ -236,12 +240,16 @@ d3.select('.reset').on('click', function() {
     x Create function to mathematically determine if there is a collision
     x Match the current enemy location with the current player location
   x Stop the game
-  - Display score and timers
+  x Display score and timers
   - (DONE)
-  - Increase number of enemies
-  - Stop the game on collision, and make it static (enemies and player)
-    - Create a reset button
+  x Increase number of enemies
+  x Stop the game on collision, and make it static (enemies and player)
+    x Create a reset button
   - Create game theme and style css accordingly
+
+  KNOWN BUGS
+
+  - GameSpeed is acting up after reset button is pressed. Memory?
 
   GAME MECHANICS
 
