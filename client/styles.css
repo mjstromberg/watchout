@@ -10,13 +10,18 @@ body {
   height: 100%;
 }
 
-.board {
+.game {
   width: 800px;
   height: 800px;
   margin: auto;
-  top: 20px;
+  margin-top: 20px;
   background-color: black;
   position: relative;
+}
+
+.board {
+  height: 100%;
+  width: 100%;
 }
 
 .enemy {

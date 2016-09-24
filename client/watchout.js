@@ -3,11 +3,49 @@ var gameSettings = {
   enemyNum: 10,
   boardSize: 800,
   enemySize: 50,
-  speed: 2000
+  playerSize: 40,
+  speed: 2000,
+  isRunning: false
 };
 
 // Enemies
 var enemies = new Array(gameSettings.enemyNum).fill('x'); // x values
+
+// create the board with d3 to get a reference to that object
+var gameBoard = d3.select('.game')
+  .append('div')
+  .attr('class', 'board')
+  .style('height', function(element) {
+    return gameSettings.boardSize + 'px';
+  })
+  .style('width', function(element) {
+    return gameSettings.boardSize + 'px';
+  });
+
+// on board object, attach click event
+gameBoard.on('click', function() {
+  if (gameSettings.isRunning) {
+    return;
+  }
+  gameSettings.isRunning = true;
+  console.log('game stated ', event);
+
+  player = d3.select('.board')
+               .append('svg')
+               .attr('class', 'player')
+               .style('top', function(element) {
+                 return (event.offsetY - (gameSettings.playerSize / 2)) + 'px';
+               })
+               .style('left', function(element) {
+                 return (event.offsetX - (gameSettings.playerSize / 2)) + 'px';
+               });
+
+  //trigger game start
+  updateEnemyLocations(enemies);
+  setInterval(function() {
+    updateEnemyLocations(enemies);
+  }, gameSettings.speed);
+});
 
 // update function that takes an array of enemies
 var updateEnemyLocations = function(data) {
@@ -18,16 +56,6 @@ var updateEnemyLocations = function(data) {
   var randomLocation = function() {
     return Math.floor(Math.random() * (gameSettings.boardSize - gameSettings.enemySize));
   };
-
-  // new Elements needs a location
-  selection.enter().append('svg')
-    .attr('class', 'enemy')
-    .style('top', function(enemy) {
-      return randomLocation() + 'px';
-    })
-    .style('left', function(enemy) {
-      return randomLocation() + 'px';
-    });
 
   // for all the old elements, update location
   selection
@@ -42,19 +70,31 @@ var updateEnemyLocations = function(data) {
     .style('left', function(enemy) {
       return randomLocation() + 'px';
     }); 
+
+  // new Elements needs a location
+  selection.enter().append('svg')
+    .attr('class', 'enemy')
+    .style('top', function(enemy) {
+      return randomLocation() + 'px';
+    })
+    .style('left', function(enemy) {
+      return randomLocation() + 'px';
+    });
 };  
 
+updateEnemyLocations(enemies);
+
 //calling the update function with the starting enemies at specified time interval
-setInterval(function() {
-  updateEnemyLocations(enemies);
-}, gameSettings.speed);
+// setInterval(function() {
+//   updateEnemyLocations(enemies);
+// }, gameSettings.speed);
 
 /*
 
   TODO
 
   x Build the player, with css
-    - make it spawn with click
+    x make it spawn with click
   - Make the player draggable
   - Calculate collisions
   - Display score and timers
