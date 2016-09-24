@@ -1,3 +1,4 @@
+
 /* your beautiful css styling goes here! */
 
 /* Note: an asteroid image is included in this repo.
@@ -38,4 +39,24 @@ body {
   background-color: white;
   position: absolute;
   border-radius: 20px;
+}
+
+.menu {
+  clear: both;
+  height: 50px;
+  width: 80%;
+  margin: auto;
+}
+
+.stats {
+  float: left;
+  text-align: center;
+  width: 25%;
+  margin: 1em;
+  font-size: 20px;
+}
+
+.button {
+  height: 20px;
+  width: 100px;
 }

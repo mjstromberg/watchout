@@ -13,10 +13,9 @@ var gameSettings = {
     rounds: 0,
   }
 };
-var left = 10;
 
 // Enemies
-var enemies = new Array(gameSettings.enemyNum).fill(0); // x values
+var enemies = [];
 
 var setText = function(key, text) {
   var c = d3.select(key)[0][0];
@@ -107,6 +106,11 @@ var placeEnemies = function(data) {
 };
 placeEnemies(enemies);
 
+var removeAllEnemies = function() {
+  var enemies = d3.selectAll('.enemy').data([]);
+  enemies.exit().remove();
+};
+
 // update function that takes an array of enemies
 var updateEnemyLocations = function(data) {
   if (!gameSettings.isRunning) {
@@ -192,6 +196,21 @@ setInterval(function() {
     setText('.current', ++gameSettings.scores.current);  
   }
 }, 10);
+
+var setupGame = function() {
+  removeAllEnemies();
+  enemies = new Array(gameSettings.enemyNum).fill(0); // x values
+  placeEnemies(enemies);
+
+  var player = d3.select('.player').data([]);
+  player.exit().remove();
+  gameSettings.newGame = true;
+};
+setupGame();
+
+d3.select('.reset').on('click', function() {
+  setupGame();
+});
 
 //calling the update function with the starting enemies at specified time interval
 // setInterval(function() {
