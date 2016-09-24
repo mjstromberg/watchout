@@ -28,23 +28,29 @@ gameBoard.on('click', function() {
     return;
   }
   gameSettings.isRunning = true;
-  console.log('game stated ', event);
   
   // set up player dragging
-  var dragCallback = function(d) {
-    d3.select(this)
-      .attr('transform', 'translate(' + d3.event.x + ',' + d3.event.y + ')');
-  };
-
   var drag = d3.behavior.drag()
                         .on('drag', function(d) {
-                          console.log('being dragged');
-                          console.log('d3.event:');
-                          console.log(d3.event);
-                          //dragCallback();
-                          d3.select(this).attr('transform', function(d) {
-                            return 'translate(' + d3.event.x + ',' + d3.event.y + ')';
-                          });
+                          d3.select(this)
+                            .style('top', function(d) {
+                              if (d3.event.y < 0) {
+                                return 0 + 'px';
+                              }
+                              if (d3.event.y > (gameSettings.boardSize - gameSettings.playerSize)) {
+                                return (gameSettings.boardSize - gameSettings.playerSize) + 'px';
+                              }
+                              return (d3.event.y - (gameSettings.playerSize / 2)) + 'px';
+                            })
+                            .style('left', function(d) {
+                              if (d3.event.x < 0) {
+                                return 0 + 'px';
+                              }
+                              if (d3.event.x > (gameSettings.boardSize - gameSettings.playerSize)) {
+                                return (gameSettings.boardSize - gameSettings.playerSize) + 'px';
+                              }
+                              return (d3.event.x - (gameSettings.playerSize / 2)) + 'px';
+                            });
                         });
 
   var player = d3.select('.board')
@@ -56,7 +62,7 @@ gameBoard.on('click', function() {
                  .style('left', function(element) {
                    return (event.offsetX - (gameSettings.playerSize / 2)) + 'px';
                  })
-                 .call(drag); //DRAG RELTAED
+                 .call(drag);
 
 
   //trigger game start
@@ -114,7 +120,7 @@ updateEnemyLocations(enemies);
 
   x Build the player, with css
     x make it spawn with click
-  - Make the player draggable
+  x Make the player draggable
   - Calculate collisions
   - Display score and timers
   - (DONE)
