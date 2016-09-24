@@ -117,6 +117,8 @@ var updateEnemyLocations = function(data) {
     return;
   }
 
+  console.log(gameSettings.speed);
+
   // add the new added enemies, in most cases its only for the first round
   var selection = d3.select('.board').selectAll('.enemy').data(data);
 
@@ -180,8 +182,6 @@ var collisionDetector = function() {
       //Stop the transition
       d3.selectAll('.enemy').transition();
 
-      setText('.rounds', ++gameSettings.scores.rounds);
-
       if (gameSettings.scores.current > gameSettings.scores.highscore) {
         gameSettings.scores.highscore = gameSettings.scores.current;
         setText('.highscore', gameSettings.scores.highscore);
@@ -189,13 +189,13 @@ var collisionDetector = function() {
     }
   });
 };
-setInterval(collisionDetector, 100);
+setInterval(collisionDetector, 10);
 
 setInterval(function() {
   if (gameSettings.isRunning) {
     setText('.current', ++gameSettings.scores.current);  
   }
-}, 10);
+}, 100);
 
 var setupGame = function() {
   removeAllEnemies();
@@ -205,11 +205,16 @@ var setupGame = function() {
   var player = d3.select('.player').data([]);
   player.exit().remove();
   gameSettings.newGame = true;
+
+  setText('.rounds', ++gameSettings.scores.rounds);
+  gameSettings.scores.current = 0;
 };
 setupGame();
 
 d3.select('.reset').on('click', function() {
-  setupGame();
+  if (!gameSettings.isRunning) {
+    setupGame();  
+  }
 });
 
 //calling the update function with the starting enemies at specified time interval
