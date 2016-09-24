@@ -95,19 +95,7 @@ var updateEnemyLocations = function(data) {
       .style('left', function(enemy) {
         return randomLocation() + 'px';
       });
-      // .tween('firstTween', function() {
-      //   var sel = d3.select(this);
-
-      //   return function(t) {
-      //       // var result = Math.floor(1000 * t);
-      //     console.log(result);
-      //   };
-      // });
-      // .style('left', function(enemy) {
-      //   left += 100;
-      //   return left + 'px';
-      // });
-
+      
   // new Elements needs a location
   selection.enter().append('svg')
     .attr('class', 'enemy')
@@ -175,12 +163,13 @@ setInterval(collisionDetector, 200);
   x Build the player, with css
     x make it spawn with click
   x Make the player draggable
-  - Calculate collisions
+  x Calculate collisions
     x Figure out if we can use 'tick'
-    - Interpolate the enemy transition by 10
-    - Set a tween function for every step in the interpolation and console log the current position
-    - Create function to mathematically determine if there is a collision
-    - Match the current enemy location with the current player location
+    x Interpolate the enemy transition by 10
+    x Set a tween function for every step in the interpolation and console log the current position
+    x Create function to mathematically determine if there is a collision
+    x Match the current enemy location with the current player location
+  - Stop the game
   - Display score and timers
   - (DONE)
   - Increase number of enemies
