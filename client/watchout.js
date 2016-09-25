@@ -50,8 +50,8 @@ gameBoard.on('click', function() {
                           }
                           d3.select(this)
                             .style('top', function(d) {
-                              if (d3.event.y < 0) {
-                                return 0 + 'px';
+                              if (d3.event.y < (gameSettings.playerSize / 2)) {
+                                return '0px';
                               }
                               if (d3.event.y > (gameSettings.boardSize - gameSettings.playerSize)) {
                                 return (gameSettings.boardSize - gameSettings.playerSize) + 'px';
@@ -59,8 +59,8 @@ gameBoard.on('click', function() {
                               return (d3.event.y - (gameSettings.playerSize / 2)) + 'px';
                             })
                             .style('left', function(d) {
-                              if (d3.event.x < 0) {
-                                return 0 + 'px';
+                              if (d3.event.x < (gameSettings.playerSize / 2)) {
+                                return '0px';
                               }
                               if (d3.event.x > (gameSettings.boardSize - gameSettings.playerSize)) {
                                 return (gameSettings.boardSize - gameSettings.playerSize) + 'px';
