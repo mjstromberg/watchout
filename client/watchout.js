@@ -101,14 +101,20 @@ var placeEnemies = function(data) {
   // add the new added enemies, in most cases its only for the first round
   var selection = d3.select('.board').selectAll('.enemy').data(data);
 
+  var locations = [[-gameSettings.enemySize, 0],
+                   [gameSettings.boardSize, 0],
+                   [-gameSettings.enemySize, gameSettings.boardSize],
+                   [gameSettings.boardSize, gameSettings.boardSize]];
+  var randomLocation = Math.floor(Math.random() * 4);
+
 // new Elements needs a location
   selection.enter().append('svg')
     .attr('class', 'enemy')
     .style('top', function(enemy) {
-      return randomLocation() + 'px';
+      return locations[randomLocation][0] + 'px';
     })
     .style('left', function(enemy) {
-      return randomLocation() + 'px';
+      return locations[randomLocation][1] + 'px';
     });
 };
 placeEnemies(enemies);
